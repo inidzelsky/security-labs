@@ -31,7 +31,7 @@ const oneCharKeyLengthCoincidences = calculateCoincidences(secondPartEncrypted, 
 const twoCharsKeyLengthCoincidences = calculateCoincidences(secondPartEncrypted, slideText(2, secondPartEncrypted))
 const threeCharsKeyLengthCoincidences = calculateCoincidences(secondPartEncrypted, slideText(1, secondPartEncrypted))
 
-const decryptXorVisioner = (encryptedText, key) => {
+const decryptXorVigenere = (encryptedText, key) => {
     let currentIndex = 0
     let result = ""
     
@@ -72,7 +72,7 @@ const guessThreeCharsKey = encryptedText => {
 
 // const possibleVariants = guessThreeCharsKey(secondPartEncrypted)
 const realKey = String.fromCharCode(76) + String.fromCharCode(48) + String.fromCharCode(108)
-const secondPartDecrypted = decryptXorVisioner(secondPartEncrypted, realKey)
+const secondPartDecrypted = decryptXorVigenere(secondPartEncrypted, realKey)
 
 writeFileSync("second_part_decrypted.txt", secondPartDecrypted)
 
