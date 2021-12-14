@@ -22,5 +22,12 @@ module.exports = {
             }
         }
         return Array.from(fragmentsFrequency.entries()).sort((a, b) => b[1] - a[1])
+    },
+    calculateCoincidences(text1, text2) {
+        return text1.split("").reduce((acc, value, index) => acc += value === text2[index] ? 1 : 0, 0)
+    },
+    slideText(charsCount, text) {
+        const textLength = text.length
+        return text.slice(textLength - charsCount, textLength) + text.slice(0, textLength - charsCount)
     }
 }

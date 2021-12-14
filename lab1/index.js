@@ -1,5 +1,5 @@
 const { readFileSync, writeFileSync } = require("fs")
-const { splitByN, frequencyAnalysis } = require("../utils")
+const { splitByN, frequencyAnalysis, calculateCoincidences, slideText } = require("../utils")
 
 // Decode the main task
 const mainEncoded = readFileSync("main_encoded.txt", "utf8")
@@ -24,5 +24,55 @@ const firstPartDecrypted = Buffer.from(splitByN(2, firstPartEncrypted)
 
 writeFileSync("first_part_decrypted.txt", firstPartDecrypted)
 
+// Decrypt the second part
+const secondPartEncrypted = Buffer.from("G0IFOFVMLRAPI1QJbEQDbFEYOFEPJxAfI10JbEMFIUAAKRAfOVIfOFkYOUQFI15ML1kcJFUeYhA4IxAeKVQZL1VMOFgJbFMDIUAAKUgFOElMI1ZMOFgFPxADIlVMO1VMO1kAIBAZP1VMI14ANRAZPEAJPlMNP1VMIFUYOFUePxxMP19MOFgJbFsJNUMcLVMJbFkfbF8CIElMfgZNbGQDbFcJOBAYJFkfbF8CKRAeJVcEOBANOUQDIVEYJVMNIFwVbEkDORAbJVwAbEAeI1INLlwVbF4JKVRMOF9MOUMJbEMDIVVMP18eOBADKhALKV4JOFkPbFEAK18eJUQEIRBEO1gFL1hMO18eJ1UIbEQEKRAOKUMYbFwNP0RMNVUNPhlAbEMFIUUALUQJKBANIl4JLVwFIldMI0JMK0INKFkJIkRMKFUfL1UCOB5MH1UeJV8ZP1wVYBAbPlkYKRAFOBAeJVcEOBACI0dAbEkDORAbJVwAbF4JKVRMJURMOF9MKFUPJUAEKUJMOFgJbF4JNERMI14JbFEfbEcJIFxCbHIJLUJMJV5MIVkCKBxMOFgJPlVLPxACIxAfPFEPKUNCbDoEOEQcPwpDY1QDL0NCK18DK1wJYlMDIR8II1MZIVUCOB8IYwEkFQcoIB1ZJUQ1CAMvE1cHOVUuOkYuCkA4eHMJL3c8JWJffHIfDWIAGEA9Y1UIJURTOUMccUMELUIFIlc=", "base64").toString("utf-8")
 
+const oneCharKeyLengthCoincidences = calculateCoincidences(secondPartEncrypted, slideText(1, secondPartEncrypted))
+const twoCharsKeyLengthCoincidences = calculateCoincidences(secondPartEncrypted, slideText(2, secondPartEncrypted))
+const threeCharsKeyLengthCoincidences = calculateCoincidences(secondPartEncrypted, slideText(1, secondPartEncrypted))
+
+const decryptXorVisioner = (encryptedText, key) => {
+    let currentIndex = 0
+    let result = ""
+    
+    for (const char of encryptedText.split("")) {
+        if (currentIndex === key.length) currentIndex = 0
+        result += String.fromCharCode(char.charCodeAt() ^ key[currentIndex++].charCodeAt())
+    }
+    
+    return result
+}
+
+const getAppropriateKeyPartChars = (keyLength, text) => {
+    const groups = new Array(keyLength).fill("")
+    let currentIndex = 0
+    
+    for (const char of text) {
+        if (currentIndex === keyLength) currentIndex = 0
+        groups[currentIndex++] += char
+    }
+    
+    return groups
+}
+
+const guessThreeCharsKey = encryptedText => { 
+    const possibleVariants = {}
+    const cipherRegExp = new RegExp("cipher", "i")
+
+    for (let i = 1; i <= 255; i++) {
+        for (let j = 1; j <= 255; j++) {
+            for (let k = 1; k <= 255; k++) {
+                const key = String.fromCharCode(i) + String.fromCharCode(j) + String.fromCharCode(k)
+                const decrypted = decryptXorVisioner(secondPartEncrypted, key)
+                if (cipherRegExp.test(decrypted)) possibleVariants[key] = decrypted
+            }
+        }
+    }
+}
+
+// const possibleVariants = guessThreeCharsKey(secondPartEncrypted)
+const realKey = String.fromCharCode(76) + String.fromCharCode(48) + String.fromCharCode(108)
+const secondPartDecrypted = decryptXorVisioner(secondPartEncrypted, realKey)
+
+writeFileSync("second_part_decrypted.txt", secondPartDecrypted)
 
