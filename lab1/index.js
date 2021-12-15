@@ -5,7 +5,7 @@ const { splitByN, frequencyAnalysis, calculateCoincidences, slideText } = requir
 const mainEncoded = readFileSync("main_encoded.txt", "utf8")
 const mainDecoded = Buffer.from(
     splitByN(8, mainEncoded)
-        .reduce((acc, value) => acc += String.fromCharCode(parseInt(value, 2)) , ""), 
+        .reduce((acc, value) => acc += String.fromCharCode(parseInt(value, 2)) , ""),
     "base64"
 ).toString("utf8")
 
@@ -34,28 +34,28 @@ const threeCharsKeyLengthCoincidences = calculateCoincidences(secondPartEncrypte
 const decryptXorVigenere = (encryptedText, key) => {
     let currentIndex = 0
     let result = ""
-    
+
     for (const char of encryptedText.split("")) {
         if (currentIndex === key.length) currentIndex = 0
         result += String.fromCharCode(char.charCodeAt() ^ key[currentIndex++].charCodeAt())
     }
-    
+
     return result
 }
 
 const getAppropriateKeyPartChars = (keyLength, text) => {
     const groups = new Array(keyLength).fill("")
     let currentIndex = 0
-    
+
     for (const char of text) {
         if (currentIndex === keyLength) currentIndex = 0
         groups[currentIndex++] += char
     }
-    
+
     return groups
 }
 
-const guessThreeCharsKey = encryptedText => { 
+const guessThreeCharsKey = encryptedText => {
     const possibleVariants = {}
     const cipherRegExp = new RegExp("cipher", "i")
 
@@ -76,3 +76,45 @@ const secondPartDecrypted = decryptXorVigenere(secondPartEncrypted, realKey)
 
 writeFileSync("second_part_decrypted.txt", secondPartDecrypted)
 
+const thirdPartEncrypted = "EFFPQLEKVTVPCPYFLMVHQLUEWCNVWFYGHYTCETHQEKLPVMSAKSPVPAPVYWMVHQLUSPQLYWLASLFVWPQLMVHQLUPLRPSQLULQESPBLWPCSVRVWFLHLWFLWPUEWFYOTCMQYSLWOYWYETHQEKLPVMSAKSPVPAPVYWHEPPLUWSGYULEMQTLPPLUGUYOLWDTVSQETHQEKLPVPVSMTLEUPQEPCYAMEWWYTYWDLUULTCYWPQLSEOLSVOHTLUYAPVWLYGDALSSVWDPQLNLCKCLRQEASPVILSLEUMQBQVMQCYAHUYKEKTCASLFPYFLMVHQLUPQLHULIVYASHEUEDUEHQBVTTPQLVWFLRYGMYVWMVFLWMLSPVTTBYUNESESADDLSPVYWCYAMEWPUCPYFVIVFLPQLOLSSEDLVWHEUPSKCPQLWAOKLUYGMQEUEMPLUSVWENLCEWFEHHTCGULXALWMCEWETCSVSPYLEMQYGPQLOMEWCYAGVWFEBECPYASLQVDQLUYUFLUGULXALWMCSPEPVSPVMSBVPQPQVSPCHLYGMVHQLUPQLWLRPOEDVMETBYUFBVTTPENLPYPQLWLRPTEKLWZYCKVPTCSTESQPBYMEHVPETCMEHVPETZMEHVPETKTMEHVPETCMEHVPETT"
+const subsitution = (encryptedText, subsctitutionTable) => {
+    const result = encryptedText.split("").map(char => "\x1b[34m" + char)
+    encryptedText.split("").forEach((char, index) => {
+        const subsitutionChar = subsctitutionTable[char]
+        if (subsitutionChar) {
+            result[index] = "\x1b[31m" + subsitutionChar
+        }
+    })
+    return result.join("")
+}
+const lettersFrequency = console.log(frequencyAnalysis(thirdPartEncrypted))
+const bigramsFrequency = console.log(frequencyAnalysis(thirdPartEncrypted, { fragmentLength: 2 }))
+const threegramsFrequency = frequencyAnalysis(thirdPartEncrypted, { fragmentLength: 3 })
+const thirdPartDecrypted = subsitution(thirdPartEncoded, {
+    'L': 'E',
+    'P': 'T',
+    'Q': 'H',
+    'U': 'R',
+    'M': 'C',
+    'V': 'I',
+    'H': 'P',
+    'E': 'A',
+    'S': 'S',
+    'T': 'L',
+    'R': 'X',
+    'B': 'W',
+    'W': 'N',
+    'C': 'Y',
+    'Y': 'O',
+    'A': 'U',
+    'K': 'B',
+    'F': 'D',
+    'D': 'G',
+    'G': 'F',
+    'I': 'V',
+    'N': 'K',
+    'O': 'M',
+    'X': 'Q',
+    'Z': 'J'
+})
+writeFileSync("third_part_decrypted.txt", thirdPartDecrypted)
