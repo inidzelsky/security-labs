@@ -4,7 +4,7 @@ import { AuthController } from "./auth.controller"
 import { HashService } from "./hash.service"
 import { DbModule } from "src/db/db.module"
 import { PasswordValidationService } from "./utils/password-validation.service"
-import { AuthRepository } from "./auth.repository"
+import { UserRepository } from "./user.repository"
 
 @Module({
     imports: [DbModule],
@@ -12,7 +12,7 @@ import { AuthRepository } from "./auth.repository"
     providers: [
         PasswordValidationService,
         AuthService,
-        AuthRepository,
+        UserRepository,
         HashService,
     ],
 })

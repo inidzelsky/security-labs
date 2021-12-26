@@ -3,7 +3,7 @@ import { DbServiceInjectKey, IDbService } from "src/db/interfaces/db-service.int
 import { User } from "./types/user.type"
 
 @Injectable()
-export class AuthRepository {
+export class UserRepository {
     constructor(
         @Inject(DbServiceInjectKey) private readonly dbService: IDbService,
     ) {}
