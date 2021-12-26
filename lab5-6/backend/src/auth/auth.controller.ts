@@ -35,7 +35,7 @@ export class AuthController {
     }
 
     @Post("login")
-    public async login(@Body() credentials: CredentialsDto) {
+    public async login(@Body() credentials: CredentialsDto): Promise<UserResponseDto> {
         try {
             return await this.authService.login(credentials)
         } catch(exception: unknown) {
