@@ -1,2 +1,5 @@
 *decoded.txt
 *decrypted.txt
+dist
+node_modules
+package-lock.json
