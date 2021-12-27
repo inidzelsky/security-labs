@@ -45,7 +45,7 @@ export class ProfileController {
         } catch (exception: unknown) {
             switch ((exception as Error).message) {
                 case "user_phone_not_found":
-                    throw new NotFoundException("User phone already exists")
+                    throw new NotFoundException("User phone not found")
                 
                 default:
                     throw new InternalServerErrorException()
