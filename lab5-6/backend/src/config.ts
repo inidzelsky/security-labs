@@ -19,4 +19,11 @@ export default () => ({
             database: process.env.PG_DATABASE,
         },
     },
+    aws: {
+        kmsKeyId: process.env.KMS_KEY_ID,
+    },
+    encryption: {
+        algorithm: "aes-256-gcm",
+        dataKey: Buffer.from(process.env.DATA_ENCRYPTION_KEY, "base64"),
+    },
 })
