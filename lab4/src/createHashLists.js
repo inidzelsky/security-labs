@@ -87,13 +87,13 @@ const collectPasswordsList = listLength => {
 const createArgonPasswordHashes = async listLength => {
     const argonPasswords = collectPasswordsList(listLength)
     const argonHashes = await Promise.all(argonPasswords.map(password => argonHash(Buffer.from(password))))
-    await writeFile("files/strong-hashes.csv", argonHashes.join("\n"))
+    await writeFile("../files/strong-hashes.csv", argonHashes.join("\n"))
 }
 
 const createShaHashes = async listLength => {
     const shaPasswords = collectPasswordsList(listLength)
     const shaHashes = await Promise.all(shaPasswords.map(password => shaHash(password)))
-    await writeFile("files/weak-hashes.csv", shaHashes.map(({ hashed, salt }) => `${hashed},${salt}`).join("\n"))
+    await writeFile("../files/weak-hashes.csv", shaHashes.map(({ hashed, salt }) => `${hashed},${salt}`).join("\n"))
 }
 
 (async () => {
