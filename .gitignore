@@ -1,6 +1,9 @@
 *decoded.txt
 *decrypted.txt
+strong-hashes.csv
+weak-hashes.csv
 dist
 node_modules
 package-lock.json
 .env
+.DS_Store
