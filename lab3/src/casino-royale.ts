@@ -1,10 +1,7 @@
 import request from "./request"
-import { PlayPayload } from "./types/casino.types"
+import { PlayPayload, PlayRawResult, PlayResult } from "./types/casino.types"
 import { HttpMethod } from "./types/request.types"
-
-interface ICasinoVisitor {
-    crack(casino: CasinoRoyale): Promise<void>
-}
+import { ICasinoVisitor } from "./interfaces/casino-visitor.interface"
 
 export class CasinoRoyale {
     private playerId: string
@@ -20,8 +17,8 @@ export class CasinoRoyale {
         await visitor.crack(this)
     }
 
-    public async play({ mode, amount, number }: PlayPayload) {
-        const response = await request({
+    public async play({ mode, amount, number }: PlayPayload): Promise<PlayResult> {
+        const { statusCode, body } = await request<PlayRawResult>({
             url: `${process.env.BASE_URL}/casino/play${mode}`,
             method: HttpMethod.GET,
             query: {
@@ -31,7 +28,16 @@ export class CasinoRoyale {
             },
         })
 
-        console.log(response)
+        const { account: { deletionTime, ...account }, realNumber, ...result } = body
+
+        return {
+            ...result,
+            account: {
+                ...account,
+                deletionTime: new Date(deletionTime),
+            },
+            realNumber: BigInt(realNumber)
+        }
     }
 
     private async registerPlayer(playerId: string) {
@@ -42,7 +48,5 @@ export class CasinoRoyale {
                 id: playerId,
             }
         })
-
-        console.log(response)
     }
 }
