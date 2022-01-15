@@ -23,7 +23,7 @@ export class LcgCracker implements ICasinoVisitor {
         const thirdTry = await casino.play({ mode: PlayMode.Lcg, amount: 1, number: 1 })
 
         const randomNumbersTuple: [bigint, bigint, bigint] = 
-            [firstTry, secondTry, thirdTry].map(({ realNumber }) => realNumber) as [bigint, bigint, bigint]
+            [firstTry, secondTry, thirdTry].map(({ realNumber }) => BigInt(realNumber)) as [bigint, bigint, bigint]
 
         this.multiplier = this.calculateMultiplier(randomNumbersTuple)
         this.incrementer = this.calculateIncrementer([randomNumbersTuple[1], randomNumbersTuple[2]])

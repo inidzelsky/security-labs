@@ -28,7 +28,7 @@ export class CasinoRoyale {
             },
         })
 
-        const { account: { deletionTime, ...account }, realNumber, ...result } = body
+        const { account: { deletionTime, ...account }, ...result } = body
 
         return {
             ...result,
@@ -36,7 +36,6 @@ export class CasinoRoyale {
                 ...account,
                 deletionTime: new Date(deletionTime),
             },
-            realNumber: BigInt(realNumber)
         }
     }
 

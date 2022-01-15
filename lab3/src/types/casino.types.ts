@@ -26,7 +26,6 @@ export type PlayRawResult = {
     realNumber: number
 }
 
-export type PlayResult = Omit<PlayRawResult, "account" | "realNumber"> & { 
+export type PlayResult = Omit<PlayRawResult, "account"> & { 
     account: Omit<PlayerRawAccount, "deletionTime"> & { deletionTime: Date }
-    realNumber: bigint
 }
