@@ -18,9 +18,9 @@ The next stage of cracking will be combinating. We combine password from 2 sourc
 
 After combinating stage I`ve got:
 * MD - 28.279 + 14.595 / 100.000 = 42.874 / 100.000
-* SHA-1 - 41.392 + 1 / 100.000 = 41.393 / 100.000
+* SHA-1 - 41.392 + 2 / 100.000 = 41.394 / 100.000
 
-I've got very nice result for weak hashes - 14.595 passwords, but after 20 minutes I've found only 1 new password for the strong hashes. Also hashcat displays prediction on finish: "4 years, 142 days". The process of cracking got too complicated for the strong hashes
+I've got very nice result for weak hashes - 14.595 passwords, but after 36 minutes I've found only 2 new passwords for the strong hashes. Also hashcat displays prediction on finish - "4 years, 142 days". The process of cracking got too complicated for the strong hashes
 
 Next step of finding hashes would be toggle-case attack, but my hashcat version does not support this one
 
